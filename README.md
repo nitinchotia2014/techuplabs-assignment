@@ -27,7 +27,7 @@ Before you begin, ensure you have the following installed:
 1. Clone the repository:
 
    ```
-   git clone https://github.com/your-username/techuplabs.git
+   git clone https://github.com/nitinchotia2014/techuplabs-assignment
    cd techuplabs
    ```
 
