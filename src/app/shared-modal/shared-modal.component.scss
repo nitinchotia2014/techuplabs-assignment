@@ -1,0 +1,17 @@
+.form-label span {
+  color: red;
+}
+.custom-file-upload {
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+
+  &.dragover {
+    border-color: #007bff;
+  }
+}
+
+::ng-deep .ngx-select_multiple {
+  padding: 0.375rem 0.75rem !important;
+}

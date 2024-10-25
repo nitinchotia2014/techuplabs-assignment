@@ -1,0 +1,57 @@
+<div class="container p-3">
+  <div class="clearfix mb-2 d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="add('Add Customer')">
+      + Add Customer
+    </button>
+  </div>
+  <div class="clearfix mb-3 d-flex align-items-center justify-content-between">
+    <h3>List of Pins</h3>
+    <button class="btn btn-primary ms-auto" (click)="add('Add Pin')">
+      + Add Pin
+    </button>
+  </div>
+
+  <table
+    class="table table-striped table-hover table-bordered align-middle"
+    *ngIf="pinData().length > 0"
+  >
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th class="text-center">Image</th>
+        <th>Collaborators</th>
+        <th class="text-center">Privacy</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pin of pinData()">
+        <td>{{ pin.title }}</td>
+        <td class="text-center">
+          <img
+            [src]="'http://localhost:3000/api/image/' + pin.imageId"
+            alt="pin image"
+            class="img-thumbnail rounded"
+            width="100"
+            height="100"
+          />
+        </td>
+        <td>{{ pin.collaboratorNames }}</td>
+        <td class="text-center">{{ pin.privacy | titlecase }}</td>
+        <td>
+          <div class="d-flex justify-content-center">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm"
+              (click)="delete(pin)"
+            >
+              Delete
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="pinData().length === 0">No pins found!</div>
+</div>

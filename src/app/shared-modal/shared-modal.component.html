@@ -1,0 +1,300 @@
+<div class="modal-header d-flex justify-content-between px-3">
+  <h4 class="modal-title">{{ modalTitle }}</h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="modalRef.hide()"
+  ></button>
+</div>
+<ng-container *ngIf="modalTitle === 'Add Customer'">
+  <form [formGroup]="customerForm" (ngSubmit)="onCustomerSubmit()">
+    <div class="modal-body">
+      <div class="mb-3 row gx-3 align-items-center">
+        <label
+          for="title"
+          class="form-label col-12 col-sm-3 text-sm-end mb-2 mb-sm-0"
+          >Title <span class="text-danger">*</span>:</label
+        >
+        <div class="col-12 col-sm-9">
+          <input
+            type="text"
+            class="form-control"
+            [class.is-invalid]="
+              customerForm.get('title')?.invalid &&
+              customerForm.get('title')?.touched
+            "
+            id="title"
+            formControlName="title"
+          />
+          <div
+            *ngIf="
+              customerForm.get('title')?.invalid &&
+              customerForm.get('title')?.touched
+            "
+            class="text-danger"
+          >
+            Title is required.
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 row gx-3 align-items-center">
+        <label
+          for="email"
+          class="form-label col-12 col-sm-3 text-sm-end mb-2 mb-sm-0"
+          >Email <span class="text-danger">*</span>:</label
+        >
+        <div class="col-12 col-sm-9">
+          <input
+            type="email"
+            class="form-control"
+            [class.is-invalid]="
+              customerForm.get('email')?.invalid &&
+              customerForm.get('email')?.touched
+            "
+            id="email"
+            formControlName="email"
+          />
+          <div
+            *ngIf="
+              customerForm.get('email')?.invalid &&
+              customerForm.get('email')?.touched
+            "
+            class="text-danger"
+          >
+            Valid email is required.
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 row gx-3 align-items-center">
+        <label
+          for="region"
+          class="form-label col-12 col-sm-3 text-sm-end mb-2 mb-sm-0"
+          >Region <span class="text-danger">*</span>:</label
+        >
+        <div class="col-12 col-sm-9">
+          <select
+            class="form-select"
+            [class.is-invalid]="
+              customerForm.get('region')?.invalid &&
+              customerForm.get('region')?.touched
+            "
+            formControlName="region"
+            (change)="onRegionChange()"
+          >
+            <option value="" disabled selected>Select a region</option>
+            <option *ngFor="let region of regions()" [value]="region.region">
+              {{ region.region }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              customerForm.get('region')?.invalid &&
+              customerForm.get('region')?.touched
+            "
+            class="text-danger"
+          >
+            Region is required.
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 row gx-3 align-items-center">
+        <label
+          for="country"
+          class="form-label col-12 col-sm-3 text-sm-end mb-2 mb-sm-0"
+          >Country <span class="text-danger">*</span>:</label
+        >
+        <div class="col-12 col-sm-9">
+          <select
+            class="form-select"
+            [class.is-invalid]="
+              customerForm.get('country')?.invalid &&
+              customerForm.get('country')?.touched
+            "
+            formControlName="country"
+          >
+            <option value="" disabled selected>Select a country</option>
+            <option
+              *ngFor="let country of countriesForSelectedRegion()"
+              [value]="country"
+            >
+              {{ country }}
+            </option>
+          </select>
+          <div
+            *ngIf="
+              customerForm.get('country')?.invalid &&
+              customerForm.get('country')?.touched
+            "
+            class="text-danger"
+          >
+            Country is required.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [class.btn-secondary]="customerForm.invalid"
+        [disabled]="customerForm.invalid"
+      >
+        Create Customer
+      </button>
+    </div>
+  </form>
+</ng-container>
+
+<ng-container *ngIf="modalTitle === 'Add Pin'">
+  <form [formGroup]="pinForm" (ngSubmit)="onPinSubmit()">
+    <div class="modal-body">
+      <div class="mb-3 row gx-3 align-items-center">
+        <label
+          for="title"
+          class="form-label col-12 col-sm-3 text-sm-end mb-2 mb-sm-0"
+          >Title <span class="text-danger">*</span>:</label
+        >
+        <div class="col-12 col-sm-9">
+          <input
+            type="text"
+            class="form-control"
+            [class.is-invalid]="
+              pinForm.get('title')?.invalid && pinForm.get('title')?.touched
+            "
+            id="title"
+            formControlName="title"
+          />
+          <div
+            *ngIf="
+              pinForm.get('title')?.invalid && pinForm.get('title')?.touched
+            "
+            class="text-danger"
+          >
+            Title is required.
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 row gx-3 align-items-center">
+        <label
+          for="image"
+          class="form-label col-12 col-sm-3 text-sm-end mb-2 mb-sm-0"
+          >Select Image <span class="text-danger">*</span> :</label
+        >
+        <div class="col-12 col-sm-9">
+          <div
+            class="custom-file-upload"
+            [class.is-invalid]="!selectedFile && pinForm.touched"
+            (click)="fileInput.click()"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+          >
+            <input
+              #fileInput
+              type="file"
+              class="d-none"
+              id="image"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+            />
+            <img
+              *ngIf="previewUrl()"
+              [src]="previewUrl()"
+              alt="selected file"
+              class="img-thumbnail rounded"
+            />
+            <p class="mb-0">
+              {{
+                selectedFile()
+                  ? selectedFile()?.name
+                  : "Drag and drop or click to upload"
+              }}
+            </p>
+          </div>
+          <div *ngIf="!selectedFile && pinForm.touched" class="text-danger">
+            Image is required.
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 row gx-3 align-items-center">
+        <label
+          for="collaborators"
+          class="form-label col-12 col-sm-3 text-sm-end mb-2 mb-sm-0"
+          >Collaborators <span class="text-danger">*</span> :</label
+        >
+        <div class="col-12 col-sm-9">
+          <ngx-select
+            [items]="customerData()"
+            [multiple]="true"
+            [autoSelectSingleOption]="true"
+            [keepSelectMenuOpened]="true"
+            [noResultsFound]="'Please add some Customers first!'"
+            [showOptionNotFoundForEmptyItems]="true"
+            optionTextField="title"
+            bindValue="id"
+            placeholder="Select collaborators"
+            formControlName="collaborators"
+            [class.is-invalid]="
+              pinForm.get('collaborators')?.invalid &&
+              pinForm.get('collaborators')?.touched
+            "
+          >
+          </ngx-select>
+          <div
+            *ngIf="
+              pinForm.get('collaborators')?.invalid &&
+              pinForm.get('collaborators')?.touched
+            "
+            class="text-danger"
+          >
+            Collaborators are required.
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 row gx-3 align-items-center">
+        <label for="country" class="form-label col-12 col-sm-3 text-sm-end mb-1"
+          >Privacy <span class="text-danger">*</span> :</label
+        >
+        <div class="col-12 col-sm-9">
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              [class.is-invalid]="
+                pinForm.get('privacy')?.invalid &&
+                pinForm.get('privacy')?.touched
+              "
+              type="radio"
+              id="privacyPublic"
+              formControlName="privacy"
+              value="public"
+            />
+            <label class="form-check-label" for="privacyPublic"> Public </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input
+              class="form-check-input"
+              type="radio"
+              id="privacyPrivate"
+              formControlName="privacy"
+              value="private"
+            />
+            <label class="form-check-label" for="privacyPrivate">
+              Private
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [class.btn-secondary]="pinForm.invalid || !selectedFile"
+        [disabled]="pinForm.invalid || !selectedFile"
+      >
+        Create Pin
+      </button>
+    </div>
+  </form>
+</ng-container>
